@@ -6,3 +6,4 @@ ruby File.read('.ruby-version').chomp
 # Gems
 gem 'rspec'
 gem 'rake'
+gem 'pry'

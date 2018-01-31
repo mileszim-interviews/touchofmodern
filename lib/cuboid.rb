@@ -1,7 +1,12 @@
+require 'pry'
+
 class Cuboid
   attr_accessor :origin, :dimensions
 
   def initialize(origin: { x: 0, y: 0, z: 0 }, dimensions: { w: 0, h: 0, l: 0 })
+    @origin = origin
+    @dimensions = dimensions
+
     # Must be a cuboid
     raise "Cuboid must have dimensions" if is_point?
 
@@ -9,14 +14,10 @@ class Cuboid
     any_invalid_point_value?(origin)
     any_invalid_point_value?(dimensions)
 
-    # Set if ok
-    @origin = origin
-    @dimensions = dimensions
-
     # Generate min/max
     @origin.each do |axis, point|
-      define_method("#{axis}_min") { point }
-      define_method("#{axis}_max") { point + dimension_from_axis(axis) }
+      define_singleton_method("#{axis}_min") { point }
+      define_singleton_method("#{axis}_max") { point + dimension_from_axis(axis) }
     end
   end
 
@@ -45,13 +46,13 @@ class Cuboid
   # Use simple AABB algorithm
   def intersects?(other)
     @origin.keys.each do |axis|
-      return true unless min_lte_max(axis, other) && max_gte_min(axis, other)
+      return false unless min_lte_max(axis, other) && max_gte_min(axis, other)
     end
-    false
+    true
   end
 
   def is_point?
-    (@dimensions.values.inject(:+) || 0) == 0
+    (dimensions.values.inject(:+) || 0) == 0
   end
 
   private
@@ -65,16 +66,22 @@ class Cuboid
   end
 
   # Map x,y,z -> l,w,h
+  def origin_dimension_key_map
+    @origin_dimension_map ||= begin
+      origin_keys = @origin.keys.to_a
+      dimension_keys = @dimensions.keys.to_a
+      raise "origin and dimensions are not of same length" if origin_keys.size != dimension_keys.size
+      Hash[[origin_keys, dimension_keys].transpose]
+    end
+  end
+
   def dimension_from_axis(axis)
-    origin_keys = @origin.keys
-    dimension_keys = @dimension.keys
-    raise "origin and dimensions are not of same length" if origin_keys.size != dimension_keys.size
-    Hash[[origin_keys, dimension_keys]][axis]
+    @dimensions[origin_dimension_key_map[axis]]
   end
 
   def any_invalid_point_value?(points)
     points.each do |axis, value|
-      raise(StopIteration, "#{axis} must be > 0. #{value} was passed.") unless value > 0
+      raise(StopIteration, "#{axis} must be >= 0. #{value} was passed.") unless value >= 0
     end
   end
 end
