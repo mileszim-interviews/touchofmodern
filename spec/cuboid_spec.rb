@@ -1,17 +1,46 @@
 require 'cuboid'
 
-#This test is incomplete and, in fact, won't even run without errors.  
-#  Do whatever you need to do to make it work and please add your own test cases for as many
-#  methods as you feel need coverage
 describe Cuboid do
- 
-  describe "move_to" do
-    it "changes the origin in the simple happy case" do
-      expect(subject.move_to!(1,2,3)).to be true
+  describe "#initialize" do
+    skip "sets origin to 0,0,0 if none given" do
     end
-  end    
-  
-  describe "intersects?" do
+
+    skip "raises an error if any dimension is <= 0" do
+    end
+
+    skip "generates min and max methods for each axis" do
+    end
+
+    skip "returns a generated cuboid with good paramters" do
+    end
   end
 
+  describe "#vertices" do
+    skip "gives a list of vertices" do
+    end
+  end
+
+  describe "#move_to!" do
+    skip "raises an error if x, y, z invalid" do
+    end
+
+    skip "moves the object" do
+    end
+  end
+
+  describe "#intersects?" do
+    skip "returns true if intersecting with another cuboid" do
+    end
+
+    skip "returns false if not intersecting with another cuboid" do
+    end
+  end
+
+  describe "#is_point?" do
+    skip "returns true if cuboid has no dimensions" do
+    end
+
+    skip "returns false if cuboid has dimensions" do
+    end
+  end
 end
