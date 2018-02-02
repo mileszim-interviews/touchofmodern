@@ -1,5 +1,3 @@
-require 'pry'
-
 class Cuboid
   attr_accessor :origin, :dimensions
 
